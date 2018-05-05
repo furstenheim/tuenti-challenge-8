@@ -1,6 +1,6 @@
 ## Tuenti challenge 8
 
-These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go.
+These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go. The complete statements of the problems can be found at https://contest.tuenti.net.
 
 * Problem 5
 
@@ -37,5 +37,18 @@ The struct defined in go would be:
     	remainingParts map[int]bool
     }
 
+## Problem 6 Button Hero
+
+This challenge reminded a lot to Guitar Hero, we had to press the keys as the notes arrived and seek the maximum score.
+
+First thing was to use the time as units, so each note was represented in the time it was present. For example, if a note
+started at x = 10, with speed 2 and length 4, it was basically the same as saying that the note was present between t = 5 and t = 7.
+
+Once we have changed the units, we make a graph by connecting a note with all the possible notes we can do next:
 
 
+![](./06-button-hero/notes-as-graph.png)
+
+
+A winning strategy will be a path jumping from one note to the next that maximizes the score. Note that we do not need to connect the first note with the last,
+ it cannot be a maximal score since we could always go through a note in the middle. Now we apply Dijkstra and we are done
