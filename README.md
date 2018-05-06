@@ -1,8 +1,6 @@
 ## Tuenti challenge 8
 
-These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go. The complete statements of the problems can be found at https://contest.tuenti.net. I've included solutions to 5, 6, 9, 11, 14 and 13
-
-* Problem 5
+These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go. The complete statements of the problems can be found at https://contest.tuenti.net. I've included solutions to 5, 6, 9, 11, 13 and 14.
 
 
 ### Problem 5 DNA Slicer
@@ -80,6 +78,8 @@ Color it in green and then apply the algorithm to that part. Repeat again:
 
  ![After](./09-scrambled-photo/test/modified_6.png )
 
+ As you can see the region of the cable is smooth now, and the QR there can be read. Repeating that with other parts of the img produced eventually the img.
+
 ### Problem 11 Lasers
 
 In this problem we were given a rectangle with diamonds. We could place lasers in each row or column. We had to
@@ -87,14 +87,15 @@ find the most number of lasers that we could fit without covering a diamond with
 
  ![Lasers](./11-lasers/lasers3.png )
 
-A nice way to see this problem was a graph. Each row and column would be a node. They would be connected if there was a
+A nice way to see this problem was as a graph. Each row or column would be a node. They would be connected if there was a
 diamond in that row and column. In the previous image the corresponding graph was
 
  ![bipartite](./11-lasers/bipartite_graph.png )
 
+left nodes correspond to rows, right nodes correspond to columns. There are four edges, one per diamond.
 We are looking for the maximum number of nodes that are not connected by edges. This is a very general problem that can be easily found in
 wikipedia. It is called the [independence Number](https://en.wikipedia.org/wiki/Independent_set_(graph_theory)), for general graphs it is `NP`-complete.
-However, for bipartite graphs it can be computed using the maximum flow (number of vertices minux the max flow). One possible way to compute the maximum flow is using [Hopcroft Karp](https://en.wikipedia.org/wiki/Hopcroft%E2%80%93Karp_algorithm),
+However, for bipartite graphs it can be computed using the maximum flow (number of vertices minus the max flow). One possible way to compute the maximum flow is using [Hopcroft Karp](https://en.wikipedia.org/wiki/Hopcroft%E2%80%93Karp_algorithm),
 there are tons of implementations on the internet, and it is not hard to adapt. The growth of the algorithm is `O(sqrt(V)E` so it can easily cope with the limits in the problem.
 
 ### Problem 14 paranoid android
@@ -116,6 +117,8 @@ As we mentioned it is important that we are always some distance away from the p
 Then, we also have to include the start and end in graph, for that we have to find out what edge of the diagram they belong two. One way of doing this is iterating over all the edges and finding the edge that contain the points.
 
 It can happen though, that the start is in one of the rays, we have to consider that case as well. Then it can also happen that both start and end are on the same edge, so we have to check if we can go straight from one to the other.
+
+After we consider those cases and a couple more (not of which were in the test cases) we are done.
 
 
 
