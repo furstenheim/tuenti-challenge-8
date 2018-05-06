@@ -79,3 +79,22 @@ Color it in green and then apply the algorithm to that part. Repeat again:
 
 
 ![After](./09-scrambled-photo/test/modified_6.png )
+
+### Problem 11 Lasers
+
+In this problem we were given a rectangle with diamonds. We could place lasers in each row or column. We had to
+find the most number of lasers that we could fit without covering a diamond with two lasers.
+
+![Lasers](./11-lasers/lasers3.png )
+
+A nice way to see this problem was a graph. Each row and column would be a node. They would be connected if there was a
+diamond in that row and column. In the previous image the corresponding graph was
+
+![bipartite](./11-lasers/bipartite_graph.png )
+
+We are looking for the maximum number of nodes that are not connected by edges. This is a very general problem that can be easily found in
+wikipedia. It is called the [independence Number](https://en.wikipedia.org/wiki/Independent_set_(graph_theory)), for general graphs it is `NP`-complete.
+However, for bipartite graphs it can be computed using the maximum flow (number of vertices minux the max flow). One possible way to compute the maximum flow is using [Hopcroft Karp](https://en.wikipedia.org/wiki/Hopcroft%E2%80%93Karp_algorithm),
+there are tons of implementations on the internet, and it is not hard to adapt. The growth of the algorithm is `O(sqrt(V)E` so it can easily cope with the limits in the problem.
+
+
