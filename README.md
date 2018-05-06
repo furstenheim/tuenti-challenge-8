@@ -1,6 +1,6 @@
 ## Tuenti challenge 8
 
-These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go. The complete statements of the problems can be found at https://contest.tuenti.net.
+These are my solutions to some of the problems from the 8th tuenti challenge (2018). All of them are in Go. The complete statements of the problems can be found at https://contest.tuenti.net. I've included solutions to 5, 6, 9, 11, 14 and 13
 
 * Problem 5
 
@@ -47,7 +47,7 @@ started at x = 10, with speed 2 and length 4, it was basically the same as sayin
 Once we have changed the units, we make a graph by connecting a note with all the possible notes we can do next:
 
 
-<!-- ![](./06-button-hero/notes-as-graph.png) -->
+ ![](./06-button-hero/notes-as-graph.png)
 
 
 A winning strategy will be a path jumping from one note to the next that maximizes the score. Note that we do not need to connect the first note with the last,
@@ -64,43 +64,67 @@ the img ordered.
 
 Of course that idea was too naive. There was a lot of stuff in the pictures and while it was possible to recognize that there was a QR code, it was not possible to read it. So this was before:
 
-<!-- ![Before](./09-scrambled-photo/test/rotated.png ) -->
+ ![Before](./09-scrambled-photo/test/rotated.png )
 
 And this was after (regions without code have been removed):
 
-<!-- ![Before](./09-scrambled-photo/test/modified_2.png ) -->
+ ![Before](./09-scrambled-photo/test/modified_2.png )
 
 So the previous process was generalized: choose a range of pixels in x and y directions. Choose a palette of colours and from that palette one particular color.
 In that box find the first pixel with the selected color and sort those lines by that pixel. Everything outside of the box you leave it like that (that is, do a stable sort).
 This approach combined very well with fuzzy selection in gimp. I would choose a region, for example next to the cable.
 Color it in green and then apply the algorithm to that part. Repeat again:
 
-<!-- ![Before](./09-scrambled-photo/test/modified_5_copy.png ) -->
+ ![Before](./09-scrambled-photo/test/modified_5_copy.png )
 
 
-<!-- ![After](./09-scrambled-photo/test/modified_6.png ) -->
+ ![After](./09-scrambled-photo/test/modified_6.png )
 
 ### Problem 11 Lasers
 
 In this problem we were given a rectangle with diamonds. We could place lasers in each row or column. We had to
 find the most number of lasers that we could fit without covering a diamond with two lasers.
 
-<!-- ![Lasers](./11-lasers/lasers3.png ) -->
+ ![Lasers](./11-lasers/lasers3.png )
 
 A nice way to see this problem was a graph. Each row and column would be a node. They would be connected if there was a
 diamond in that row and column. In the previous image the corresponding graph was
 
-<!-- ![bipartite](./11-lasers/bipartite_graph.png ) -->
+ ![bipartite](./11-lasers/bipartite_graph.png )
 
 We are looking for the maximum number of nodes that are not connected by edges. This is a very general problem that can be easily found in
 wikipedia. It is called the [independence Number](https://en.wikipedia.org/wiki/Independent_set_(graph_theory)), for general graphs it is `NP`-complete.
 However, for bipartite graphs it can be computed using the maximum flow (number of vertices minux the max flow). One possible way to compute the maximum flow is using [Hopcroft Karp](https://en.wikipedia.org/wiki/Hopcroft%E2%80%93Karp_algorithm),
 there are tons of implementations on the internet, and it is not hard to adapt. The growth of the algorithm is `O(sqrt(V)E` so it can easily cope with the limits in the problem.
 
+### Problem 14 paranoid android
+
+In this problem we are given a bunch of points that we have to avoid and a start and end. We have to walk from the start to the end so that we **always** keep the nearest two points at the same distance and we are always at least some distance away from the points.
+
+![Sample](./14-paranoid-android/sample.gif)
+
+The key here is to remember Voronoi diagram. In a voronoi diagram each cell contains all the points that are closest to the centers. So the edges are exactly those points of the plane that are at the same distance from the two closest points.
+
+![voronoi](./14-paranoid-android/voronoi.png)
+
+The edges of the Voronoi diagram form a graph (did I say that I liked graphs) and we have to traverse that graph from the start point to the end point finding the shortest route (Dijkstra again).
+
+The main idea of the algorithm is pretty clear. In this case the hard part is the implementation details.
+
+As we mentioned it is important that we are always some distance away from the points. How can we manage that? Given a segment we need to find the closest point and calculate the distance. Luckily I had recently written a [point index in golang](https://github.com/furstenheim/SimpleRTree) so it was enough to consider the middle point of the edge and find the closest point (there are actually two but we don't bother since the distance is the same).
+
+Then, we also have to include the start and end in graph, for that we have to find out what edge of the diagram they belong two. One way of doing this is iterating over all the edges and finding the edge that contain the points.
+
+It can happen though, that the start is in one of the rays, we have to consider that case as well. Then it can also happen that both start and end are on the same edge, so we have to check if we can go straight from one to the other.
+
+
+
+
+
 
 ### Problem 13 pieces
 
-The solution for this problem is messier to explain, so I've left for the end.
+The solution for this problem is messier to explain, so I've left it for the end.
 
 In this problem we are given an integer and we need to compute how many ways we can split a board of 3xn so that each piece touche
 the upper and the lower part. For example for n = 3 these are all the possibilities
